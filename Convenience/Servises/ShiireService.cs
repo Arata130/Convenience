@@ -85,27 +85,23 @@ namespace Convenience.Servises {
         }
 
         public ShiireJisseki ChumonZanBalance(ShiireJisseki inshiireJisseki) {
-            ShiireJisseki ShiireJisseki;
             decimal NonyuSu = inshiireJisseki.NonyuSu;
-            decimal ChumonSu = inshiireJisseki.ChumonJissekiMeisais.ChumonSu;
+            decimal ChumonZan = inshiireJisseki.ChumonJissekiMeisais.ChumonZan;
 
-            if (ChumonSu >= NonyuSu) {
-                inshiireJisseki.ChumonJissekiMeisais.ChumonZan = ChumonSu - NonyuSu;
+            if (ChumonZan >= NonyuSu) {
+                inshiireJisseki.ChumonJissekiMeisais.ChumonZan -= NonyuSu;
             }
             else {
                 //エラーイベント：納入数が注文数より多いため、数量の間違いあり
             }
-            ShiireJisseki = inshiireJisseki;
+            ShiireJisseki shiireJisseki = inshiireJisseki;
 
-            return ShiireJisseki;
+            return shiireJisseki;
         }
 
-        public (ShiireJisseki shiireJisseki, SokoZaiko sokoZaiko) ShiireJissekiUpdate(ShiireJisseki inshiireJisseki) {
+        public (ShiireJisseki shiireJisseki, SokoZaiko sokoZaiko) ShiireJissekiUpdate(ShiireJisseki inshiireJisseki, SokoZaiko insokoZaiko) {
             ShiireJisseki shiireJisseki = inshiireJisseki;
-            SokoZaiko sokoZaiko = _context.SokoZaikos
-                .Where(s => s.ShiirePrdId == shiireJisseki.ShiirePrdId)
-                .OrderBy(s => s.ShiirePrdId)
-                .FirstOrDefault();
+            SokoZaiko sokoZaiko = insokoZaiko;
 
             shiireJisseki = ChumonZanBalance(shiireJisseki);
             sokoZaiko.SokoZaikoSu += shiireJisseki.NonyuSu;

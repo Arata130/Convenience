@@ -47,14 +47,14 @@
             </thead>
             <tbody>
                 @for (var i = 0; i < Model.ShiireJisseki.Count; i++) {
-                    <input type="hidden" name="ShiireJisseki[@i].ChumonJissekiMeisais.ChumonId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonId" />
-                    <input type="hidden" name="ShiireJisseki[@i].ChumonJissekiMeisais.ShiireSakiId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireSakiId" />
-                    <input type="hidden" name="ShiireJisseki[@i].ChumonJissekiMeisais.ShiirePrdId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" />
-                    <input type="hidden" name="ShiireJisseki[@i].ChumonJissekiMeisais.ShohinId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShohinId" />
-                    <input type="hidden" name="ShiireJisseki[@i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" />
-                    <input type="hidden" name="ShiireJisseki[@i].ChumonJissekiMeisais.ChumonZan" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonZan" />
-                    <input type="hidden" name="ShiireJisseki[@i].NonyuSu" value="@Model.ShiireJisseki[i].NonyuSu" />
-                    <input type="hidden" name="SokoZaiko[@i].SokoZaikoSu" value="@Model.SokoZaiko[i].SokoZaikoSu" />
+                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ChumonId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonId" />
+                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShiireSakiId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireSakiId" />
+                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" />
+                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShohinId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShohinId" />
+                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" />
+                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ChumonZan" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonZan" />
+                    <input type="hidden" name="ShiireJisseki[i].NonyuSu" value="@Model.ShiireJisseki[i].NonyuSu" />
+                    <input type="hidden" name="SokoZaiko[i].SokoZaikoSu" value="@Model.SokoZaiko[i].SokoZaikoSu" />
                     <tr>
                         <td>
                             <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" class="form-control custom-disabled" tabindex="-1" />

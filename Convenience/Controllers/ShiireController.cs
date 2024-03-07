@@ -42,6 +42,8 @@ namespace Convenience.Controllers {
             if (shiireJisseki == null) {
                 shiireJissekis = shiire.ShiireCreate(inChumonId);
                 sokoZaikos = shiire.ZaikoCreate(inChumonId);
+                _context.ShiireJissekis.AddRange(shiireJissekis);
+                _context.SokoZaikos.AddRange(sokoZaikos);
             }
             else {
                 shiireJisseki.SeqByShiireDate++;
@@ -59,18 +61,21 @@ namespace Convenience.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ShiireView(List<ShiireJisseki> inshiireJisseki) {
+        public async Task<IActionResult> ShiireView(ShiireViewModel inshiireViewModel) {
+            List<ShiireJisseki> shiireJissekis = inshiireViewModel.ShiireJisseki;
+            List<SokoZaiko> sokoZaikos = inshiireViewModel.SokoZaiko;
             IShiire shiire = new ShiireService(_context);
             ModelState.Clear();
 
             List<ShiireJisseki> updatedShiireJissekis = new List<ShiireJisseki>();
             List<SokoZaiko> updatedSokoZaikos = new List<SokoZaiko>();
 
-            foreach (var shiireJisseki in inshiireJisseki) {
-                var result = shiire.ShiireJissekiUpdate(shiireJisseki);
+            foreach (var (shiireJisseki, sokoZaiko) in shiireJissekis.Zip(sokoZaikos, (a, b) => (a, b))) {
+                var result = shiire.ShiireJissekiUpdate(shiireJisseki, sokoZaiko);
                 updatedShiireJissekis.Add(result.shiireJisseki);
                 updatedSokoZaikos.Add(result.sokoZaiko);
             };
+
 
             // データベースに変更を保存する
             await _context.SaveChangesAsync();
