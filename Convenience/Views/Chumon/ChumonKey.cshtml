@@ -1,0 +1,26 @@
+﻿@using Convenience.Models.ViewModels.Chumon;
+@model ChumonKeyViewModel;
+
+@{
+    ViewData["Title"] = "ChumonKey";
+}
+
+<h3>仕入先指定</h3>
+
+<form asp-action="ChumonKey" method="post">
+    <div class="form-group">
+        <label asp-for="ShiireSakiId" class="control-label"></label>
+        <select asp-for="ShiireSakiId" asp-items="@Model.ShiireSakiList" class="form-control" name="inShiireSakiId">
+            <option value="">-- 選択してください --</option>
+        </select>
+        <span asp-validation-for="ShiireSakiId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ChumonDate" class="control-label"></label>
+        <input asp-for="ChumonDate" class="form-control" name="inChumonDate" />
+        <span asp-validation-for="ChumonDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>

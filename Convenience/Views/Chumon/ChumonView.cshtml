@@ -1,0 +1,91 @@
+﻿@using Convenience.Models.ViewModels.Chumon;
+@model ChumonViewModel;
+
+@{
+    ViewData["Title"] = "ChumonView";
+}
+
+<h3>商品注文</h3>
+
+<div class="form-group container">
+    <form asp-action="ChumonView">
+        <input type="hidden" name="id" value="1" />
+        <div class="row">
+            <label asp-for="@Model.ChumonJisseki.ShiireSakiId" class="control-label col"></label>
+            <input asp-for="@Model.ChumonJisseki.ShiireSakiId" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+        <div class="row">
+            <label asp-for="@Model.ChumonJisseki.ChumonId" class="control-label col"></label>
+            <input asp-for="@Model.ChumonJisseki.ChumonId" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+        <div class="row">
+            <label asp-for="@Model.ChumonJisseki.ChumonDate" class="control-label col"></label>
+            <input asp-for="@Model.ChumonJisseki.ChumonDate" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>仕入商品コード</th>
+                    <th>仕入商品名称</th>
+                    <th>商品名称</th>
+                    <th>注文数</th>
+                    <th>注文残</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.ChumonJisseki.ChumonJissekiMeisais.Count; i++) {
+                    <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ChumonId" type="hidden" />
+                    <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ShiirePrdId" type="hidden" />
+                    <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ShohinId" type="hidden" />
+                    <tr>
+                        <td>
+                            <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ShiirePrdId" class="form-control custom-disabled" tabindex="-1" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ShiireMaster.ShiirePrdName" class="form-control custom-disabled" tabindex="-1" disabled />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ShiireMaster.ShohinMaster.ShohinName" class="form-control custom-disabled" tabindex="-1" 　disabled />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ChumonSu" class="form-control" />
+                        </td>
+                        <td>
+                            <input data-input-control="nofocus" asp-for="@Model.ChumonJisseki.ChumonJissekiMeisais[i].ChumonZan" class="form-control custom-disabled" tabindex="-1" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+    <p>
+        <div id="remark">
+            @Model.Remark
+        </div>
+    </p>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('input').on('focus', function () {
+                $('#remark').empty();
+            });
+
+            $('.custom-disabled').on('focus', function () {
+                $(this).prop('readonly', true);
+            });
+
+            $('.custom-disabled').on('blur', function () {
+                $(this).prop('readonly', false);
+            });
+        });
+    </script>
+}

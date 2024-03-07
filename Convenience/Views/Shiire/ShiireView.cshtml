@@ -1,0 +1,103 @@
+﻿@using Convenience.Models.ViewModels.Shiire;
+@model ShiireViewModel;
+
+@{
+    ViewData["Title"] = "ShiireView";
+}
+
+<h3>仕入明細</h3>
+
+<div class="form-group container">
+    <form asp-action="ShiireView">
+        <input type="hidden" name="id" value="1" />
+        <div class="row">
+            <label asp-for="@Model.ShiireJisseki[0].ChumonId" class="control-label col"></label>
+            <input asp-for="@Model.ShiireJisseki[0].ChumonId" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+        <div class="row">
+            <label asp-for="@Model.ShiireJisseki[0].ChumonJissekiMeisais.ChumonJisseki.ChumonDate" class="control-label col"></label>
+            <input asp-for="@Model.ShiireJisseki[0].ChumonJissekiMeisais.ChumonJisseki.ChumonDate" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+        <div class="row">
+            <label asp-for="@Model.ShiireJisseki[0].ShiireDate" class="control-label col"></label>
+            <input asp-for="@Model.ShiireJisseki[0].ShiireDate" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+        <div class="row">
+            <label asp-for="@Model.ShiireJisseki[0].SeqByShiireDate" class="control-label col"></label>
+            <input asp-for="@Model.ShiireJisseki[0].SeqByShiireDate" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+        <div class="row">
+            <label asp-for="@Model.ShiireJisseki[0].ShiireSakiId" class="control-label col"></label>
+            <input asp-for="@Model.ShiireJisseki[0].ShiireSakiId" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+        <div class="row">
+            <label asp-for="@Model.ShiireJisseki[0].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.ShiireSakiKaisya" class="control-label col"></label>
+            <input asp-for="@Model.ShiireJisseki[0].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.ShiireSakiKaisya" class="form-control custom-disabled col" tabindex="-1" />
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>仕入商品コード</th>
+                    <th>仕入商品名称</th>
+                    <th>注文残</th>
+                    <th>納入数</th>
+                    <th>倉庫在庫数</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.ShiireJisseki.Count; i++) {
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShohinId" type="hidden" />
+                    <tr>
+                        <td>
+                            <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" class="form-control custom-disabled" tabindex="-1" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" class="form-control custom-disabled" tabindex="-1" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonZan" class="form-control custom-disabled" tabindex="-1" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.ShiireJisseki[i].NonyuSu" class="form-control" />
+                        </td>
+                        <td>
+                            <input data-input-control="nofocus" asp-for="@Model.SokoZaiko[i].SokoZaikoSu" class="form-control custom-disabled" tabindex="-1" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+    <p>
+        <div id="remark">
+            @Model.Remark
+        </div>
+    </p>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('input').on('focus', function () {
+                $('#remark').empty();
+            });
+
+            $('.custom-disabled').on('focus', function () {
+                $(this).prop('readonly', true);
+            });
+
+            $('.custom-disabled').on('blur', function () {
+                $(this).prop('readonly', false);
+            });
+        });
+    </script>
+}
