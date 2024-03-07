@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Convenience.Models.Interfaces;
 using Convenience.Servises;
 using Convenience.Models.Date.Shiire;
-using Convenience.Models.Date.Chumon;
 
 namespace Convenience.Controllers {
     public class ShiireController : Controller {
