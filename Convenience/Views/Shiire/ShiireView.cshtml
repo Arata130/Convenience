@@ -47,17 +47,55 @@
             </thead>
             <tbody>
                 @for (var i = 0; i < Model.ShiireJisseki.Count; i++) {
-                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ChumonId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonId" />
-                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShiireSakiId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireSakiId" />
-                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" />
-                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShohinId" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShohinId" />
-                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" />
-                    <input type="hidden" name="ShiireJisseki[i].ChumonJissekiMeisais.ChumonZan" value="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonZan" />
-                    <input type="hidden" name="ShiireJisseki[i].NonyuSu" value="@Model.ShiireJisseki[i].NonyuSu" />
-                    <input type="hidden" name="SokoZaiko[i].SokoZaikoSu" value="@Model.SokoZaiko[i].SokoZaikoSu" />
+                    <input asp-for="@Model.SokoZaiko[i].ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.SokoZaiko[i].ShiirePrdId" type="hidden" />
+                    <input asp-for="@Model.SokoZaiko[i].ShohinId" type="hidden" />
+                    <input asp-for="@Model.SokoZaiko[i].SokoZaikoCaseSu" type="hidden" />
+                    <input asp-for="@Model.SokoZaiko[i].LastShiireDate" type="hidden" />
+                    <input asp-for="@Model.SokoZaiko[i].LastDeliveryDate" type="hidden" />
+
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ShiireDate" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].SeqByShiireDate" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ShiireDateTime" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ShiirePrdId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ShohinId" type="hidden" />
+
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShohinId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonSu" type="hidden" />
+
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonJisseki.ChumonId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonJisseki.ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ChumonJisseki.ChumonDate" type="hidden" />
+
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShohinId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePcsPerUnit" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireUnit" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShireTanka" type="hidden" />
+
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.ShiireSakiId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.ShiireSakiKaisya" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.ShiireSakiBusho" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.YubinBango" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.Shikuchoson" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.Banchi" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiireSakiMaster.Tatemonomei" type="hidden" />
+
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShohinMaster.ShohinId" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShohinMaster.ShohinName" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShohinMaster.ShohiZeiritsu" type="hidden" />
+                    <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShohinMaster.ShohiZeiritsuGaishoku" type="hidden" />
+
                     <tr>
                         <td>
-                            <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiirePrdId" class="form-control custom-disabled" tabindex="-1" />
+                            <input asp-for="@Model.ShiireJisseki[i].ShiirePrdId" class="form-control custom-disabled" tabindex="-1" />
                         </td>
                         <td>
                             <input asp-for="@Model.ShiireJisseki[i].ChumonJissekiMeisais.ShiireMaster.ShiirePrdName" class="form-control custom-disabled" tabindex="-1" />
@@ -102,6 +140,17 @@
             $('.custom-disabled').on('blur', function () {
                 $(this).prop('readonly', false);
             });
+
+            $('.custom-disabled').prop('readonly', false); // すべてのreadonlyフィールドを一時的に解除
+
+            // 各readonlyフィールドの値を手動でフォームに追加
+            $('.custom-disabled').each(function () {
+                var name = $(this).attr('name');
+                var value = $(this).val();
+                $(this).after('<input type="hidden" name="' + name + '" value="' + value + '">');
+            });
+            
+            return true; // フォームを送信
         });
     </script>
 }

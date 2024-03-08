@@ -14,7 +14,6 @@ namespace Convenience.Servises
         }
 
         public ChumonJisseki chumonJisseki { get; set; }
-        //public ChumonJisseki ChumonJisseki { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public ChumonJisseki ChumonCreate(string inShiireSakiId) {
             //注文実績に新登録分

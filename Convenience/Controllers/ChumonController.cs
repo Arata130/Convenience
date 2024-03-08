@@ -47,9 +47,7 @@ namespace Convenience.Controllers
             else {
                 chumonJisseki = chumonService.ChumonUpdate(chumonJisseki);
             }
-
             viewModel.ChumonJisseki = chumonJisseki;
-
 
             return View("ChumonView", viewModel);
         }
@@ -83,8 +81,5 @@ namespace Convenience.Controllers
 
             return View(chumonViewModel);
         }
-
-
-
     }
 }
