@@ -35,7 +35,6 @@ namespace Convenience.Controllers
             IChumon chumonService = new ChumonService(_context);
             ModelState.Clear();
 
-            //string inShireSakiId, DateOnly inChumonDate
             string ShiireSakiId = inShiireSakiId;
             DateOnly ChumonDate = inChumonDate;
 
