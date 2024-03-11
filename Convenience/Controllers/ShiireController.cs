@@ -95,17 +95,6 @@ namespace Convenience.Controllers {
                 updatedSokoZaikos.Add(sokoZaikoResult);
             }
 
-            foreach (var shiireJisseki in inshiireViewModel.ShiireJisseki) {
-                ShiireJisseki shiireJissekii = _context.ShiireJissekis
-                    .Where(s => s.ChumonId == shiireJisseki.ChumonId && s.ShiirePrdId == shiireJisseki.ShiirePrdId)
-                    .Include(s => s.ChumonJissekiMeisais)
-                    .ThenInclude(s => s.ShiireMaster)
-                    .ThenInclude(s => s.ShiireSakiMaster)
-                    .ThenInclude(s => s.ShiireMasters)
-                    .ThenInclude(s => s.ShohinMaster)
-                    .First();
-            }
-
             // データベースに変更を保存する
             await _context.SaveChangesAsync();
 
