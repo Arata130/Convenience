@@ -48,6 +48,7 @@ namespace Convenience.Controllers {
                 .ThenInclude(c => c.ShiireSakiMaster)
                 .Include(c => c.ShiireMaster)
                 .ThenInclude(c => c.ShohinMaster)
+                .Include(c => c.ShiireJisseki)
                 .OrderBy(c => c.ShiirePrdId)
                 .ToList();
 
@@ -110,9 +111,17 @@ namespace Convenience.Controllers {
             // 更新された仕入実績と在庫を格納するリストを初期化
             List<ShiireJisseki> updatedShiireJissekis = new List<ShiireJisseki>();
             List<SokoZaiko> updatedSokoZaikos = new List<SokoZaiko>();
-                        
+
             // 仕入実績と在庫を一緒に処理
             foreach (var (shiireJisseki, sokoZaiko) in shiireJissekis.Zip(sokoZaikos, (a, b) => (a, b))) {
+
+                ChumonJissekiMeisai chumonJissekiMeisai = _context.ChumonJissekiMeisais.Where(c => c.ChumonId == shiireJisseki.ChumonId && c.ShiirePrdId == shiireJisseki.ShiirePrdId && c.ShohinId == shiireJisseki.ShohinId)
+                    .Include(c => c.ShiireMaster)
+                    .ThenInclude(c => c.ShiireSakiMaster)
+                    .Include(c => c.ShiireMaster)
+                    .ThenInclude(c => c.ShohinMaster)
+                    .First();
+
                 // 仕入実績と在庫を更新
                 (ShiireJisseki shiireJissekiResult, SokoZaiko sokoZaikoResult) = shiire.ShiireJissekiUpdate(shiireJisseki, sokoZaiko);
                 // 更新された仕入実績と在庫をリストに追加
@@ -132,6 +141,5 @@ namespace Convenience.Controllers {
             // ShiireViewにViewModelを渡してビューを返す
             return View(viewModel);
         }
-
     }
 }

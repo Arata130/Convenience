@@ -101,47 +101,51 @@ namespace Convenience.Servises {
             decimal NonyuSu = inshiireJisseki.NonyuSu;
 
             // 仕入実績の更新
-            ShiireJisseki updatedShiireJisseki = _context.ShiireJissekis.FirstOrDefault(s => s.ChumonId == inshiireJisseki.ChumonId && s.ShiireSakiId == inshiireJisseki.ShiireSakiId && s.ShiirePrdId == inshiireJisseki.ShiirePrdId && s.SeqByShiireDate == inshiireJisseki.SeqByShiireDate && s.ShiireDate == inshiireJisseki.ShiireDate);
+            ShiireJisseki updatedShiireJisseki = _context.ShiireJissekis
+                .Include(s => s.ChumonJissekiMeisais)
+                .FirstOrDefault(s => s.ChumonId == inshiireJisseki.ChumonId && s.ShiireSakiId == inshiireJisseki.ShiireSakiId && s.ShiirePrdId == inshiireJisseki.ShiirePrdId && s.SeqByShiireDate == inshiireJisseki.SeqByShiireDate && s.ShiireDate == inshiireJisseki.ShiireDate);
             if (updatedShiireJisseki != null) {
-                // AutoMapperを使用して更新
-                var config = new MapperConfiguration(cfg => {
-                    cfg.AddCollectionMappers();
-                    cfg.CreateMap<ShiireJisseki, ShiireJisseki>()
-                       .EqualityComparison((odto, o) => odto.ChumonId == o.ChumonId && odto.ShiireDate == o.ShiireDate && odto.SeqByShiireDate == o.SeqByShiireDate && odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId);
-                });
-                var mapper = new Mapper(config);
-                mapper.Map(inshiireJisseki, updatedShiireJisseki);
+                // 更新
+                updatedShiireJisseki.ShiireDateTime = inshiireJisseki.ShiireDateTime; // 仕入日時の更新     
 
                 // 注文残の更新処理
-                foreach (ChumonJissekiMeisai meisai in updatedShiireJisseki.ChumonJissekiMeisais.ToList()) {
-                    meisai.ChumonZan -= NonyuSu;
+                ChumonJissekiMeisai meisai = updatedShiireJisseki.ChumonJissekiMeisais;
+                meisai.ChumonZan -= NonyuSu;
+
+                // 既存のエンティティを取得してプロパティを変更して保存
+                var existingMeisai = _context.ChumonJissekiMeisais.FirstOrDefault(c => c.ChumonId == meisai.ChumonId && c.ShiireSakiId == meisai.ShiireSakiId && c.ShiirePrdId == meisai.ShiirePrdId && c.ShohinId == meisai.ShohinId);
+
+                if (existingMeisai != null) {
+                    existingMeisai.ChumonZan = meisai.ChumonZan;
                 }
             }
             else {
                 // 仕入実績が見つからない場合、新しい仕入実績を追加
-                _context.ShiireJissekis.Add(inshiireJisseki);
+                ShiireJisseki shiireJisseki = new ShiireJisseki();
+
+                ChumonJissekiMeisai existingMeisai = _context.ChumonJissekiMeisais
+                    .FirstOrDefault(c => c.ChumonId == inshiireJisseki.ChumonId && c.ShiireSakiId == inshiireJisseki.ShiireSakiId && c.ShiirePrdId == inshiireJisseki.ShiirePrdId && c.ShohinId == inshiireJisseki.ShohinId);
+
+                if (existingMeisai != null) {
+                    // 新しいShiireJissekiをChumonJissekiMeisaiに関連付ける
+                    existingMeisai.ShiireJisseki = shiireJisseki;
+                }
+
                 updatedShiireJisseki = inshiireJisseki;
+                _context.ShiireJissekis.Add(updatedShiireJisseki);
             }
 
             // 倉庫在庫の更新
             SokoZaiko updatedSokoZaiko = _context.SokoZaikos.FirstOrDefault(s => s.ShiireSakiId == insokoZaiko.ShiireSakiId && s.ShiirePrdId == insokoZaiko.ShiirePrdId && s.ShohinId == insokoZaiko.ShohinId);
             if (updatedSokoZaiko != null) {
-                // AutoMapperを使用して更新
-                var config = new MapperConfiguration(cfg => {
-                    cfg.AddCollectionMappers();
-                    cfg.CreateMap<SokoZaiko, SokoZaiko>()
-                       .EqualityComparison((odto, o) => odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId && odto.ShohinId == o.ShohinId);
-                });
-                var mapper = new Mapper(config);
-                mapper.Map(insokoZaiko, updatedSokoZaiko);
-
-                // 倉庫在庫数の更新処理
-                updatedSokoZaiko.SokoZaikoSu += NonyuSu;
+                // 更新
+                updatedSokoZaiko.LastShiireDate = insokoZaiko.LastShiireDate; // 直近仕入日の更新
+                updatedSokoZaiko.SokoZaikoSu += NonyuSu; // 倉庫在庫数の更新
             }
             else {
                 // 倉庫在庫が見つからない場合、新しい倉庫在庫を追加
-                _context.SokoZaikos.Add(insokoZaiko);
                 updatedSokoZaiko = insokoZaiko;
+                _context.SokoZaikos.Add(updatedSokoZaiko);
             }
 
             // 変更を保存

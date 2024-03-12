@@ -8,8 +8,7 @@ namespace Convenience.Models.Date.Chumon
 {
     [Table("chumon_jisseki_meisai")]
     [PrimaryKey(nameof(ChumonId), nameof(ShiireSakiId), nameof(ShiirePrdId), nameof(ShohinId))]
-    public class ChumonJissekiMeisai
-    {
+    public class ChumonJissekiMeisai {
         //注文コード
         [Column("chumon_code", TypeName = "character varying(20)")]
         [Required]
@@ -44,13 +43,16 @@ namespace Convenience.Models.Date.Chumon
         //仕入マスタ　外部キーの設定
         [ForeignKey(nameof(ShiireSakiId) + "," + nameof(ShiirePrdId) + "," + nameof(ShohinId))]
         public ShiireMaster? ShiireMaster { get; set; }
-        public List<ShiireJisseki> ShiireJiseekis { get; set; }
+        [ForeignKey(nameof(ChumonId) + "," + nameof(ShiireSakiId) + "," + nameof(ShiirePrdId) + "," + nameof(ShiireDate) + "," + nameof(SeqByShiireDate))]
+        public ShiireJisseki? ShiireJisseki { get; set; }
+
 
         [NotMapped]
         public decimal LastChumonSu { get; internal set; }
+        [NotMapped]
+        public DateTime ShiireDate { get; set; }
+        [NotMapped]
+        public uint SeqByShiireDate { get; set; }
 
-        internal IEnumerable<object> ToList() {
-            throw new NotImplementedException();
-        }
     }
 }
