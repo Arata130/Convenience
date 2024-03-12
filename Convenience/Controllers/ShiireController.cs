@@ -7,7 +7,6 @@ using Convenience.Models.Interfaces;
 using Convenience.Servises;
 using Convenience.Models.Date.Shiire;
 using Convenience.Models.Date.Chumon;
-using Convenience.Models.ViewModels.Chumon;
 
 namespace Convenience.Controllers {
     public class ShiireController : Controller {
