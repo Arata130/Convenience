@@ -68,7 +68,7 @@ namespace Convenience.Controllers {
                 }
                 else {  // 仕入実績があった場合（当日）
                         // 時間のみ変更
-                    shiireJisseki.ShiireDateTime = DateTime.UtcNow;
+                    shiireJisseki.ShiireDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
                 }
                 // リストに仕入実績を追加
                 shiireJissekis.Add(shiireJisseki);
@@ -103,10 +103,14 @@ namespace Convenience.Controllers {
             List<ShiireJisseki> shiireJissekis = inshiireViewModel.ShiireJisseki;
             List<SokoZaiko> sokoZaikos = inshiireViewModel.SokoZaiko;
 
+            foreach (var shiireJisseki in inshiireViewModel.ShiireJisseki) {
+                shiireJisseki.ShiireDateTime = DateTime.SpecifyKind(shiireJisseki.ShiireDateTime, DateTimeKind.Utc);
+            }
+
             // 更新された仕入実績と在庫を格納するリストを初期化
             List<ShiireJisseki> updatedShiireJissekis = new List<ShiireJisseki>();
             List<SokoZaiko> updatedSokoZaikos = new List<SokoZaiko>();
-
+                        
             // 仕入実績と在庫を一緒に処理
             foreach (var (shiireJisseki, sokoZaiko) in shiireJissekis.Zip(sokoZaikos, (a, b) => (a, b))) {
                 // 仕入実績と在庫を更新

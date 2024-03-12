@@ -25,7 +25,7 @@ namespace Convenience.Servises {
                 ChumonId = chumonJissekiMeisai.ChumonId,
                 ShiireDate = DateOnly.FromDateTime(DateTime.Today),
                 SeqByShiireDate = 1,
-                ShiireDateTime = DateTime.UtcNow,
+                ShiireDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
                 ShiireSakiId = chumonJissekiMeisai.ShiireSakiId,
                 ShiirePrdId = chumonJissekiMeisai.ShiirePrdId,
                 ShohinId = chumonJissekiMeisai.ShohinId,
@@ -104,15 +104,15 @@ namespace Convenience.Servises {
             return sokoZaiko;
         }
 
-        public (ShiireJisseki shiireJisseki, SokoZaiko sokoZaiko) ShiireJissekiUpdate(ShiireJisseki inshiireJisseki, SokoZaiko insokoZaiko) {
+        /*public (ShiireJisseki shiireJisseki, SokoZaiko sokoZaiko) ShiireJissekiUpdate(ShiireJisseki inshiireJisseki, SokoZaiko insokoZaiko) {
             List<ShiireJisseki> shiireJissekis = new List<ShiireJisseki>();
             List<SokoZaiko> sokoZaikos = new List<SokoZaiko>();
 
             decimal NonyuSu = inshiireJisseki.NonyuSu;
 
-            ShiireJisseki shiireJisseki = _context.ShiireJissekis.SingleOrDefault(s => s.ChumonId == inshiireJisseki.ChumonId && s.ShiireSakiId == inshiireJisseki.ShiireSakiId && s.ShiirePrdId == inshiireJisseki.ShiirePrdId && s.SeqByShiireDate == ShiireJisseki.SeqByShiireDate && s.ShiireDate == inshiireJisseki.ShiireDate);
+            ShiireJisseki shiireJisseki = _context.ShiireJissekis.FirstOrDefault(s => s.ChumonId == inshiireJisseki.ChumonId && s.ShiireSakiId == inshiireJisseki.ShiireSakiId && s.ShiirePrdId == inshiireJisseki.ShiirePrdId && s.SeqByShiireDate == ShiireJisseki.SeqByShiireDate && s.ShiireDate == inshiireJisseki.ShiireDate);
 
-            SokoZaiko sokoZaiko = _context.SokoZaikos.SingleOrDefault(s => s.ShiireSakiId == insokoZaiko.ShiireSakiId && s.ShiirePrdId == insokoZaiko.ShiirePrdId && s.ShohinId == insokoZaiko.ShohinId);
+            SokoZaiko sokoZaiko = _context.SokoZaikos.FirstOrDefault(s => s.ShiireSakiId == insokoZaiko.ShiireSakiId && s.ShiirePrdId == insokoZaiko.ShiirePrdId && s.ShohinId == insokoZaiko.ShohinId);
 
             if (shiireJisseki != null) {
                 // ShiireJissekiの更新
@@ -121,8 +121,7 @@ namespace Convenience.Servises {
                     .FirstOrDefault(e => e.ChumonId == inshiireJisseki.ChumonId && e.ShiireDate == inshiireJisseki.ShiireDate && e.SeqByShiireDate == inshiireJisseki.SeqByShiireDate && e.ShiireSakiId == inshiireJisseki.ShiireSakiId && e.ShiirePrdId == inshiireJisseki.ShiirePrdId);
 
                 // AutoMapperを使用して更新
-                var config = new MapperConfiguration(cfg =>
-                {
+                var config = new MapperConfiguration(cfg => {
                     cfg.AddCollectionMappers();
                     cfg.CreateMap<ShiireJisseki, ShiireJisseki>()
                        .EqualityComparison((odto, o) => odto.ChumonId == o.ChumonId && odto.ShiireDate == o.ShiireDate && odto.SeqByShiireDate == o.SeqByShiireDate && odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId);
@@ -147,8 +146,7 @@ namespace Convenience.Servises {
                 SokoZaiko existedsokoZaiko = _context.SokoZaikos.FirstOrDefault(e => e.ShiireSakiId == sokoZaiko.ShiireSakiId && e.ShiirePrdId == sokoZaiko.ShiirePrdId && e.ShohinId == sokoZaiko.ShohinId);
 
                 // AutoMapperを使用して更新
-                var config = new MapperConfiguration(cfg =>
-                {
+                var config = new MapperConfiguration(cfg => {
                     cfg.AddCollectionMappers();
                     cfg.CreateMap<SokoZaiko, SokoZaiko>()
                        .EqualityComparison((odto, o) => odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId && odto.ShohinId == o.ShohinId);
@@ -167,6 +165,58 @@ namespace Convenience.Servises {
             }
 
             return (shiireJisseki, sokoZaiko);
+        }*/
+        public (ShiireJisseki shiireJissekiResult, SokoZaiko sokoZaikoResult) ShiireJissekiUpdate(ShiireJisseki inshiireJisseki, SokoZaiko insokoZaiko) {
+            decimal NonyuSu = inshiireJisseki.NonyuSu;
+
+            // 仕入実績の更新
+            ShiireJisseki updatedShiireJisseki = _context.ShiireJissekis.FirstOrDefault(s => s.ChumonId == inshiireJisseki.ChumonId && s.ShiireSakiId == inshiireJisseki.ShiireSakiId && s.ShiirePrdId == inshiireJisseki.ShiirePrdId && s.SeqByShiireDate == inshiireJisseki.SeqByShiireDate && s.ShiireDate == inshiireJisseki.ShiireDate);
+            if (updatedShiireJisseki != null) {
+                // AutoMapperを使用して更新
+                var config = new MapperConfiguration(cfg => {
+                    cfg.AddCollectionMappers();
+                    cfg.CreateMap<ShiireJisseki, ShiireJisseki>()
+                       .EqualityComparison((odto, o) => odto.ChumonId == o.ChumonId && odto.ShiireDate == o.ShiireDate && odto.SeqByShiireDate == o.SeqByShiireDate && odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId);
+                });
+                var mapper = new Mapper(config);
+                mapper.Map(inshiireJisseki, updatedShiireJisseki);
+
+                // 注文残の更新処理
+                foreach (ChumonJissekiMeisai meisai in updatedShiireJisseki.ChumonJissekiMeisais.ToList()) {
+                    meisai.ChumonZan -= NonyuSu;
+                }
+            }
+            else {
+                // 仕入実績が見つからない場合、新しい仕入実績を追加
+                _context.ShiireJissekis.Add(inshiireJisseki);
+                updatedShiireJisseki = inshiireJisseki;
+            }
+
+            // 倉庫在庫の更新
+            SokoZaiko updatedSokoZaiko = _context.SokoZaikos.FirstOrDefault(s => s.ShiireSakiId == insokoZaiko.ShiireSakiId && s.ShiirePrdId == insokoZaiko.ShiirePrdId && s.ShohinId == insokoZaiko.ShohinId);
+            if (updatedSokoZaiko != null) {
+                // AutoMapperを使用して更新
+                var config = new MapperConfiguration(cfg => {
+                    cfg.AddCollectionMappers();
+                    cfg.CreateMap<SokoZaiko, SokoZaiko>()
+                       .EqualityComparison((odto, o) => odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId && odto.ShohinId == o.ShohinId);
+                });
+                var mapper = new Mapper(config);
+                mapper.Map(insokoZaiko, updatedSokoZaiko);
+
+                // 倉庫在庫数の更新処理
+                updatedSokoZaiko.SokoZaikoSu += NonyuSu;
+            }
+            else {
+                // 倉庫在庫が見つからない場合、新しい倉庫在庫を追加
+                _context.SokoZaikos.Add(insokoZaiko);
+                updatedSokoZaiko = insokoZaiko;
+            }
+
+            // 変更を保存
+            _context.SaveChanges();
+
+            return (updatedShiireJisseki, updatedSokoZaiko);
         }
 
     }

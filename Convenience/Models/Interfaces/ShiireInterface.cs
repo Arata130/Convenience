@@ -10,6 +10,6 @@ namespace Convenience.Models.Interfaces {
         public ShiireJisseki ShiireCreate(ChumonJissekiMeisai chumonJissekiMeisai);
         public SokoZaiko ZaikoCreate(ShiireMaster shiireMaster, ShiireJisseki shiireJisseki);
         public ShiireJisseki ChumonZanBalance(ShiireJisseki inshiireJisseki);
-        public (ShiireJisseki shiireJisseki, SokoZaiko sokoZaiko) ShiireJissekiUpdate(ShiireJisseki inshiireJisseki, SokoZaiko sokoZaiko);
+        public (ShiireJisseki shiireJissekiResult, SokoZaiko sokoZaikoResult) ShiireJissekiUpdate(ShiireJisseki inshiireJisseki, SokoZaiko insokoZaiko);
     }
 }
