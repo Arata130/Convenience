@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Convenience.Models.Date.Shiire;
 
-
 namespace Convenience.Models.Date.Chumon
 {
     [Table("chumon_jisseki_meisai")]
@@ -49,5 +48,9 @@ namespace Convenience.Models.Date.Chumon
 
         [NotMapped]
         public decimal LastChumonSu { get; internal set; }
+
+        internal IEnumerable<object> ToList() {
+            throw new NotImplementedException();
+        }
     }
 }
