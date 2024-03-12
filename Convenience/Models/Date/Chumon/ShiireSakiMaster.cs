@@ -1,11 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
 
-namespace Convenience.Models.Date.Chumon
-{
+namespace Convenience.Models.Date.Chumon {
     [Table("shiire_saki_master")]
     [PrimaryKey(nameof(ShiireSakiId))]
     public class ShiireSakiMaster
