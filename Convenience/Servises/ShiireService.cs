@@ -121,8 +121,7 @@ namespace Convenience.Servises {
                     .FirstOrDefault(e => e.ChumonId == inshiireJisseki.ChumonId && e.ShiireDate == inshiireJisseki.ShiireDate && e.SeqByShiireDate == inshiireJisseki.SeqByShiireDate && e.ShiireSakiId == inshiireJisseki.ShiireSakiId && e.ShiirePrdId == inshiireJisseki.ShiirePrdId);
 
                 // AutoMapperを使用して更新
-                var config = new MapperConfiguration(cfg =>
-                {
+                var config = new MapperConfiguration(cfg => {
                     cfg.AddCollectionMappers();
                     cfg.CreateMap<ShiireJisseki, ShiireJisseki>()
                        .EqualityComparison((odto, o) => odto.ChumonId == o.ChumonId && odto.ShiireDate == o.ShiireDate && odto.SeqByShiireDate == o.SeqByShiireDate && odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId);
@@ -147,8 +146,7 @@ namespace Convenience.Servises {
                 SokoZaiko existedsokoZaiko = _context.SokoZaikos.FirstOrDefault(e => e.ShiireSakiId == sokoZaiko.ShiireSakiId && e.ShiirePrdId == sokoZaiko.ShiirePrdId && e.ShohinId == sokoZaiko.ShohinId);
 
                 // AutoMapperを使用して更新
-                var config = new MapperConfiguration(cfg =>
-                {
+                var config = new MapperConfiguration(cfg => {
                     cfg.AddCollectionMappers();
                     cfg.CreateMap<SokoZaiko, SokoZaiko>()
                        .EqualityComparison((odto, o) => odto.ShiireSakiId == o.ShiireSakiId && odto.ShiirePrdId == o.ShiirePrdId && odto.ShohinId == o.ShohinId);
