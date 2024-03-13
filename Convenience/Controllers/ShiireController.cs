@@ -41,16 +41,15 @@ namespace Convenience.Controllers {
             ModelState.Clear();
 
             // 注文実績明細を取得
-            List<ChumonJissekiMeisai> chumonJissekiMeisais = _context.ChumonJissekiMeisais
+            List<ChumonJissekiMeisai> chumonJissekiMeisais =　await _context.ChumonJissekiMeisais
                 .Where(c => c.ChumonId == ChumonId)
                 .Include(c => c.ChumonJisseki)
                 .Include(c => c.ShiireMaster)
                 .ThenInclude(c => c.ShiireSakiMaster)
                 .Include(c => c.ShiireMaster)
                 .ThenInclude(c => c.ShohinMaster)
-                .Include(c => c.ShiireJisseki)
                 .OrderBy(c => c.ShiirePrdId)
-                .ToList();
+                .ToListAsync();
 
             // 仕入実績と在庫を格納するリストを初期化
             List<ShiireJisseki> shiireJissekis = new List<ShiireJisseki>();
@@ -62,7 +61,7 @@ namespace Convenience.Controllers {
             // 注文実績明細ごとに処理
             foreach (var chumonJissekiMeisai in chumonJissekiMeisais) {
                 // 注文に対応する仕入実績を取得する
-                ShiireJisseki shiireJisseki = shiire.ShiireToiawase(ChumonId, ShiireDate);
+                ShiireJisseki shiireJisseki = shiire.ShiireToiawase(chumonJissekiMeisai);
                 if (shiireJisseki == null) {  // 実績がなかった場合（当日）
                                               // 新しい仕入実績を作成
                     shiireJisseki = shiire.ShiireCreate(chumonJissekiMeisai);
@@ -116,6 +115,7 @@ namespace Convenience.Controllers {
             foreach (var (shiireJisseki, sokoZaiko) in shiireJissekis.Zip(sokoZaikos, (a, b) => (a, b))) {
 
                 ChumonJissekiMeisai chumonJissekiMeisai = _context.ChumonJissekiMeisais.Where(c => c.ChumonId == shiireJisseki.ChumonId && c.ShiirePrdId == shiireJisseki.ShiirePrdId && c.ShohinId == shiireJisseki.ShohinId)
+                    .Include(c => c.ChumonJisseki)
                     .Include(c => c.ShiireMaster)
                     .ThenInclude(c => c.ShiireSakiMaster)
                     .Include(c => c.ShiireMaster)

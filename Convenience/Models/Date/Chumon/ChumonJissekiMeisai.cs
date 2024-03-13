@@ -43,16 +43,12 @@ namespace Convenience.Models.Date.Chumon
         //仕入マスタ　外部キーの設定
         [ForeignKey(nameof(ShiireSakiId) + "," + nameof(ShiirePrdId) + "," + nameof(ShohinId))]
         public ShiireMaster? ShiireMaster { get; set; }
-        [ForeignKey(nameof(ChumonId) + "," + nameof(ShiireSakiId) + "," + nameof(ShiirePrdId) + "," + nameof(ShiireDate) + "," + nameof(SeqByShiireDate))]
-        public ShiireJisseki? ShiireJisseki { get; set; }
+
+        public ShiireJisseki? ShiireJissekis { get; set; }
 
 
         [NotMapped]
         public decimal LastChumonSu { get; internal set; }
-        [NotMapped]
-        public DateTime ShiireDate { get; set; }
-        [NotMapped]
-        public uint SeqByShiireDate { get; set; }
 
     }
 }

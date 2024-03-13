@@ -47,7 +47,7 @@ namespace Convenience.Models.Date.Chumon
         [ForeignKey(nameof(ShohinId))]
         public ShohinMaster? ShohinMaster { get; set; }
         public List<ChumonJissekiMeisai>? ChumonJissekiMeisais { get; set; }
-        public List<SokoZaiko>? SokoZaikos { get; set; }
+        public SokoZaiko? SokoZaikos { get; set; }
 
     }
 }
