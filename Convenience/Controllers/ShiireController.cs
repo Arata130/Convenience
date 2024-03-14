@@ -7,6 +7,8 @@ using Convenience.Models.Interfaces;
 using Convenience.Servises;
 using Convenience.Models.Date.Shiire;
 using Convenience.Models.Date.Chumon;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using NuGet.Protocol.Plugins;
 
 namespace Convenience.Controllers {
     public class ShiireController : Controller {
@@ -32,17 +34,17 @@ namespace Convenience.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ShiireKey(string inChumonId, ShiireViewModel viewModel) {
-            // 引数から注文IDを取得
-            string ChumonId = inChumonId;
-            // 仕入サービスのインスタンスを作成
+        public async Task<IActionResult> ShiireKey(string inChumonId) {
             IShiire shiire = new ShiireService(_context);
-            // ModelStateをクリア
             ModelState.Clear();
+
+            // 仕入実績と在庫を格納するリストを初期化
+            List<ShiireJisseki> shiireJissekis = new List<ShiireJisseki>();
+            List<SokoZaiko> sokoZaikos = new List<SokoZaiko>();
 
             // 注文実績明細を取得
             List<ChumonJissekiMeisai> chumonJissekiMeisais =　await _context.ChumonJissekiMeisais
-                .Where(c => c.ChumonId == ChumonId)
+                .Where(c => c.ChumonId == inChumonId)
                 .Include(c => c.ChumonJisseki)
                 .Include(c => c.ShiireMaster)
                 .ThenInclude(c => c.ShiireSakiMaster)
@@ -51,27 +53,12 @@ namespace Convenience.Controllers {
                 .OrderBy(c => c.ShiirePrdId)
                 .ToListAsync();
 
-            // 仕入実績と在庫を格納するリストを初期化
-            List<ShiireJisseki> shiireJissekis = new List<ShiireJisseki>();
-            List<SokoZaiko> sokoZaikos = new List<SokoZaiko>();
-
-            // 当日の日付を取得
-            DateOnly ShiireDate = DateOnly.FromDateTime(DateTime.Today);
-
-            // 注文実績明細ごとに処理
             foreach (var chumonJissekiMeisai in chumonJissekiMeisais) {
-                // 注文に対応する仕入実績を取得する
-                ShiireJisseki shiireJisseki = shiire.ShiireToiawase(chumonJissekiMeisai);
-                if (shiireJisseki == null) {  // 実績がなかった場合（当日）
-                                              // 新しい仕入実績を作成
-                    shiireJisseki = shiire.ShiireCreate(chumonJissekiMeisai);
-                }
-                else {  // 仕入実績があった場合（当日）
-                        // 時間のみ変更
-                    shiireJisseki.ShiireDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
-                }
+                // 注文に対応する仕入実績を取得、作成する
+                ShiireJisseki shiireJisseki = shiire.ShiireCreate(chumonJissekiMeisai);
                 // リストに仕入実績を追加
                 shiireJissekis.Add(shiireJisseki);
+
                 // 仕入マスタを検索して在庫を作成
                 ShiireMaster shiireMaster = _context.ShiireMasters
                     .Where(s => s.ShiireSakiId == chumonJissekiMeisai.ShiireSakiId && s.ShiirePrdId == chumonJissekiMeisai.ShiirePrdId && s.ShohinId == chumonJissekiMeisai.ShohinId)
@@ -84,51 +71,40 @@ namespace Convenience.Controllers {
             }
 
             // ViewModelに仕入実績と在庫をセット
-            viewModel.ShiireJisseki = shiireJissekis;
-            viewModel.SokoZaiko = sokoZaikos;
-
-            // ShiireViewにViewModelを渡してビューを返す
+            ShiireViewModel viewModel = new ShiireViewModel() {
+                ShiireJisseki = shiireJissekis,
+                SokoZaiko = sokoZaikos
+            };
             return View("ShiireView", viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShiireView(ShiireViewModel inshiireViewModel) {
-            // 仕入サービスのインスタンスを作成
+            string message = null;
             IShiire shiire = new ShiireService(_context);
-            // ModelStateをクリア
             ModelState.Clear();
-
-            // ViewModelから仕入実績と在庫を取得
-            List<ShiireJisseki> shiireJissekis = inshiireViewModel.ShiireJisseki;
-            List<SokoZaiko> sokoZaikos = inshiireViewModel.SokoZaiko;
-
-            foreach (var shiireJisseki in inshiireViewModel.ShiireJisseki) {
-                shiireJisseki.ShiireDateTime = DateTime.SpecifyKind(shiireJisseki.ShiireDateTime, DateTimeKind.Utc);
-            }
 
             // 更新された仕入実績と在庫を格納するリストを初期化
             List<ShiireJisseki> updatedShiireJissekis = new List<ShiireJisseki>();
             List<SokoZaiko> updatedSokoZaikos = new List<SokoZaiko>();
 
             // 仕入実績と在庫を一緒に処理
-            foreach (var (shiireJisseki, sokoZaiko) in shiireJissekis.Zip(sokoZaikos, (a, b) => (a, b))) {
-
-                ChumonJissekiMeisai chumonJissekiMeisai = _context.ChumonJissekiMeisais.Where(c => c.ChumonId == shiireJisseki.ChumonId && c.ShiirePrdId == shiireJisseki.ShiirePrdId && c.ShohinId == shiireJisseki.ShohinId)
-                    .Include(c => c.ChumonJisseki)
-                    .Include(c => c.ShiireMaster)
-                    .ThenInclude(c => c.ShiireSakiMaster)
-                    .Include(c => c.ShiireMaster)
-                    .ThenInclude(c => c.ShohinMaster)
-                    .First();
-
-                // 仕入実績と在庫を更新
-                (ShiireJisseki shiireJissekiResult, SokoZaiko sokoZaikoResult) = shiire.ShiireJissekiUpdate(shiireJisseki, sokoZaiko);
-                // 更新された仕入実績と在庫をリストに追加
-                updatedShiireJissekis.Add(shiireJissekiResult);
-                updatedSokoZaikos.Add(sokoZaikoResult);
+            foreach (var (shiireJisseki, sokoZaiko) in inshiireViewModel.ShiireJisseki.Zip(inshiireViewModel.SokoZaiko, (a, b) => (a, b))) {
+                if (shiireJisseki.ChumonJissekiMeisais.ChumonSu >= sokoZaiko.SokoZaikoSu) {
+                    // 仕入実績と在庫を更新
+                    (ShiireJisseki shiireJissekiResult, SokoZaiko sokoZaikoResult) = shiire.ShiireJissekiUpdate(shiireJisseki, sokoZaiko);
+                    // 更新された仕入実績と在庫をリストに追加
+                    updatedShiireJissekis.Add(shiireJissekiResult);
+                    updatedSokoZaikos.Add(sokoZaikoResult);
+                    message = "仕入登録完了";
+                }
+                else {
+                    updatedShiireJissekis.Add(shiireJisseki);
+                    updatedSokoZaikos.Add(sokoZaiko);
+                    message = "エラー：" + shiireJisseki.ChumonJissekiMeisais.ShiirePrdId + "の納入数が注文数を超過";
+                }
             }
-
             // データベースに変更を保存
             await _context.SaveChangesAsync();
 
@@ -136,7 +112,7 @@ namespace Convenience.Controllers {
             ShiireViewModel viewModel = new ShiireViewModel() {
                 ShiireJisseki = updatedShiireJissekis,
                 SokoZaiko = updatedSokoZaikos,
-                Remark = "仕入登録完了"
+                Remark = message
             };
             // ShiireViewにViewModelを渡してビューを返す
             return View(viewModel);
