@@ -7,8 +7,6 @@ using Convenience.Models.Interfaces;
 using Convenience.Servises;
 using Convenience.Models.Date.Shiire;
 using Convenience.Models.Date.Chumon;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using NuGet.Protocol.Plugins;
 
 namespace Convenience.Controllers {
     public class ShiireController : Controller {
@@ -91,7 +89,7 @@ namespace Convenience.Controllers {
 
             // 仕入実績と在庫を一緒に処理
             foreach (var (shiireJisseki, sokoZaiko) in inshiireViewModel.ShiireJisseki.Zip(inshiireViewModel.SokoZaiko, (a, b) => (a, b))) {
-                if (shiireJisseki.ChumonJissekiMeisais.ChumonSu >= sokoZaiko.SokoZaikoSu) {
+                if (shiireJisseki.ChumonJissekiMeisais.ChumonZan >= shiireJisseki.NonyuSu) {
                     // 仕入実績と在庫を更新
                     (ShiireJisseki shiireJissekiResult, SokoZaiko sokoZaikoResult) = shiire.ShiireJissekiUpdate(shiireJisseki, sokoZaiko);
                     // 更新された仕入実績と在庫をリストに追加

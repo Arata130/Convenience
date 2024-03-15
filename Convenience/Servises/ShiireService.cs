@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.EquivalencyExpression;
-using Convenience.Data;
-using Convenience.Migrations;
+﻿using Convenience.Data;
 using Convenience.Models.Date.Chumon;
 using Convenience.Models.Date.Shiire;
 using Convenience.Models.Interfaces;
@@ -14,7 +11,6 @@ namespace Convenience.Servises {
         public ShiireService(ConvenienceContext context) {
             _context = context;
         }
-
         public ShiireJisseki ShiireJisseki { get; set; }
         public SokoZaiko SokoZaiko { get; set; }
 
@@ -114,7 +110,8 @@ namespace Convenience.Servises {
                     .FirstOrDefault(c => c.ChumonId == meisai.ChumonId && c.ShiireSakiId == meisai.ShiireSakiId && c.ShiirePrdId == meisai.ShiirePrdId && c.ShohinId == meisai.ShohinId);
 
                 if (existingMeisai != null) {
-                    existingMeisai.ChumonZan -= inshiireJisseki.NonyuSu;  //注文実績明細　注文残の計算
+                    existingMeisai.ShiireJissekis.NonyuSu = inshiireJisseki.NonyuSu;
+                    existingMeisai.ChumonZan -= existingMeisai.ShiireJissekis.NonyuSu;  //注文実績明細　注文残の計算
                 }
             }
             else {  
@@ -124,6 +121,8 @@ namespace Convenience.Servises {
                  */
                 ChumonJissekiMeisai existingMeisai = _context.ChumonJissekiMeisais
                     .Where(c => c.ChumonId == inshiireJisseki.ChumonId && c.ShiireSakiId == inshiireJisseki.ShiireSakiId && c.ShiirePrdId == inshiireJisseki.ShiirePrdId && c.ShohinId == inshiireJisseki.ShohinId)
+                    .Include(c => c.ChumonJisseki)
+                    .ThenInclude(c => c.ShiireSakiMaster)
                     .FirstOrDefault();
 
                 if (existingMeisai != null) {

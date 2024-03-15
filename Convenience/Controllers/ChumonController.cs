@@ -28,7 +28,6 @@ namespace Convenience.Controllers
             return View(chumonKeyViewModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChumonKey(string inShiireSakiId, DateOnly inChumonDate, ChumonViewModel viewModel) {
