@@ -22,7 +22,7 @@ namespace Convenience.Controllers {
             //データベースからリストを取得し、ToListAsync() を使って非同期で取得
             ShiireKeyViewModel shiireKeyViewModel = new ShiireKeyViewModel() {
                 ChumonIdList = await _context.ChumonJissekis
-                .OrderBy(c => c.ChumonId)
+                .OrderByDescending(c => c.ChumonId)
                 .Select(c => new SelectListItem { Value = c.ChumonId, Text = c.ChumonId })
                 .ToListAsync()
             };
